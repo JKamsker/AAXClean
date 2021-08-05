@@ -132,6 +132,22 @@ namespace AAXClean
             audioFilter.Close();
         }
 
+        public ConversionResult ConvertToWave(Stream outputStream, ChapterInfo userChapters = null)
+        {
+            var audioHandler = AudioChunkHandler;
+
+
+            audioHandler.FrameFilter = new WaveFilter(outputStream, audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.Esds.ES_Descriptor.DecoderConfig.AudioConfig, audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.SampleSize)  ;
+
+
+            ProcessAudio(audioHandler);
+
+            Chapters = userChapters;
+            audioHandler.FrameFilter.Close();
+
+            return audioHandler.Success && !isCancelled ? ConversionResult.NoErrorsDetected : ConversionResult.Failed;
+        }
+
         public ConversionResult ConvertToMp4a(Stream outputStream, ChapterInfo userChapters = null)
         {
             var audioHandler = AudioChunkHandler;
