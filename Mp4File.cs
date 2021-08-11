@@ -95,7 +95,7 @@ namespace AAXClean
 
             using var audioFilter = new AacToMp3Filter(
                 outputStream,
-                audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.Esds.ES_Descriptor.DecoderConfig.AudioConfig.Blob,
+                audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.Esds.ES_Descriptor.DecoderConfig.AudioConfig,
                 audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.SampleSize,
                 lameConfig);
 
@@ -122,7 +122,7 @@ namespace AAXClean
             using var audioFilter = new AacToMp3MultipartFilter(
                 userChapters,
                 newFileCallback,
-                audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.Esds.ES_Descriptor.DecoderConfig.AudioConfig.Blob,
+                audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.Esds.ES_Descriptor.DecoderConfig.AudioConfig,
                 audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.SampleSize,
                 lameConfig);
 

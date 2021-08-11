@@ -1,4 +1,5 @@
-﻿using NAudio.Lame;
+﻿using AAXClean.Descriptors;
+using NAudio.Lame;
 using System;
 
 namespace AAXClean.AudioFilters
@@ -6,17 +7,17 @@ namespace AAXClean.AudioFilters
     sealed class AacToMp3MultipartFilter : MultipartFilter
     {
         protected override Action<NewSplitCallback> NewFileCallback { get; }
-        private byte[] ASC { get; }
+        private AudioSpecificConfig ASC { get; }
         private ushort SampleSize { get; }
         private LameConfig LameConfig;
 
         private AacToMp3Filter AacToMp3Filter;
 
-        public AacToMp3MultipartFilter(ChapterInfo splitChapters, Action<NewSplitCallback> newFileCallback, byte[] audioSpecificConfig, ushort sampleSize, LameConfig lameConfig)
-                        : base(audioSpecificConfig, splitChapters)
+        public AacToMp3MultipartFilter(ChapterInfo splitChapters, Action<NewSplitCallback> newFileCallback, AudioSpecificConfig asc, ushort sampleSize, LameConfig lameConfig)
+                        : base(asc.Blob, splitChapters)
         {
             LameConfig = lameConfig;
-            ASC = audioSpecificConfig;
+            ASC = asc;
             SampleSize = sampleSize;
             LameConfig = lameConfig;
             NewFileCallback = newFileCallback;

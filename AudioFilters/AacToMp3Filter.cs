@@ -1,4 +1,5 @@
-﻿using NAudio.Lame;
+﻿using AAXClean.Descriptors;
+using NAudio.Lame;
 using NAudio.Wave;
 using System;
 using System.Collections.Concurrent;
@@ -17,13 +18,13 @@ namespace AAXClean.AudioFilters
         private WaveFormat waveFormat;
         private Stream OutputStream;
 
-        public AacToMp3Filter(Stream mp3Output, byte[] audioSpecificConfig, ushort sampleSize, LameConfig lameConfig)
+        public AacToMp3Filter(Stream mp3Output, AudioSpecificConfig asc, ushort sampleSize, LameConfig lameConfig)
         {
             if (sampleSize != AacDecoder.BITS_PER_SAMPLE)
                 throw new ArgumentException($"{nameof(AacToMp3Filter)} only supports 16-bit aac streams.");
 
             OutputStream = mp3Output;
-            decoder = new Aac2Decoder(audioSpecificConfig);
+            decoder = new CustomAacDecoder(asc);
 
             waveFormat = new WaveFormat(decoder.SampleRate, sampleSize, decoder.Channels);
 
