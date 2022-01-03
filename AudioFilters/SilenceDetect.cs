@@ -19,7 +19,7 @@ namespace AAXClean.AudioFilters
 		public SilenceDetect(double db, TimeSpan minDuration, byte[] audioSpecificConfig, ushort sampleSize)
 		{
 			if (BITS_PER_SAMPLE != sampleSize)
-				throw new ArgumentException($"{nameof(AacToMp3Filter)} only supports 16-bit aac streams.");
+				throw new ArgumentException($"AacToMp3Filter only supports 16-bit aac streams.");
 
 			decoder = new Aac2Decoder(audioSpecificConfig);
 

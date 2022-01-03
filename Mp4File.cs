@@ -88,52 +88,6 @@ namespace AAXClean
 			}
 		}
 
-		public ConversionResult ConvertToMp3(Stream outputStream, NAudio.Lame.LameConfig lameConfig = null, ChapterInfo userChapters = null)
-		{
-			using var audioHandler = GetAudioChunkHandler();
-
-			lameConfig ??= GetDefaultLameConfig();
-			lameConfig.ID3 ??= AacToMp3Filter.GetDefaultMp3Tags(AppleTags);
-
-			using var audioFilter = new AacToMp3Filter(
-				outputStream,
-				audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.Esds.ES_Descriptor.DecoderConfig.AudioConfig.Blob,
-				audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.SampleSize,
-				lameConfig);
-
-			audioHandler.FrameFilter = audioFilter;
-			var chapterHandler = new ChapterChunkHandler(TimeScale, Moov.TextTrack);
-
-			ProcessAudio(audioHandler, chapterHandler);
-
-			audioFilter.Close();
-			outputStream.Close();
-
-			Chapters = userChapters ?? chapterHandler.Chapters;
-
-			return audioHandler.Success && !isCancelled ? ConversionResult.NoErrorsDetected : ConversionResult.Failed;
-		}
-
-		public void ConvertToMultiMp3(ChapterInfo userChapters, Action<NewSplitCallback> newFileCallback, NAudio.Lame.LameConfig lameConfig = null)
-		{
-			using var audioHandler = GetAudioChunkHandler();
-
-			lameConfig ??= GetDefaultLameConfig();
-			lameConfig.ID3 ??= AacToMp3Filter.GetDefaultMp3Tags(AppleTags);
-
-			using var audioFilter = new AacToMp3MultipartFilter(
-				userChapters,
-				newFileCallback,
-				audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.Esds.ES_Descriptor.DecoderConfig.AudioConfig.Blob,
-				audioHandler.Track.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.SampleSize,
-				lameConfig);
-
-			audioHandler.FrameFilter = audioFilter;
-
-			ProcessAudio(audioHandler);
-			audioFilter.Close();
-		}
-
 		public ConversionResult ConvertToMp4a(Stream outputStream, ChapterInfo userChapters = null)
 		{
 			using var audioHandler = GetAudioChunkHandler();
@@ -233,18 +187,18 @@ namespace AAXClean
 			}
 		}
 
-		private NAudio.Lame.LameConfig GetDefaultLameConfig()
-		{
-			double channelDown = Moov.AudioTrack.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.ChannelCount == 1 ? 1 : 0.5;
+		//private NAudio.Lame.LameConfig GetDefaultLameConfig()
+		//{
+		//	double channelDown = Moov.AudioTrack.Mdia.Minf.Stbl.Stsd.AudioSampleEntry.ChannelCount == 1 ? 1 : 0.5;
 
-			var lameConfig = new NAudio.Lame.LameConfig
-			{
-				ABRRateKbps = (int)(CalculateAudioSizeAndBitrate().avgBitrate * channelDown / 1024),
-				Mode = NAudio.Lame.MPEGMode.Mono,
-				VBR = NAudio.Lame.VBRMode.ABR,
-			};
-			return lameConfig;
-		}
+		//	var lameConfig = new NAudio.Lame.LameConfig
+		//	{
+		//		ABRRateKbps = (int)(CalculateAudioSizeAndBitrate().avgBitrate * channelDown / 1024),
+		//		Mode = NAudio.Lame.MPEGMode.Mono,
+		//		VBR = NAudio.Lame.VBRMode.ABR,
+		//	};
+		//	return lameConfig;
+		//}
 
 
 		protected (long audioSize, uint avgBitrate) CalculateAudioSizeAndBitrate()
