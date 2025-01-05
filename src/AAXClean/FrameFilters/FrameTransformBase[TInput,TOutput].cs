@@ -14,7 +14,7 @@ namespace AAXClean.FrameFilters
 		}
 
 		public void LinkTo(FrameFilterBase<TOutput> nextFilter) => Linked = nextFilter;
-		public abstract TOutput PerformFiltering(TInput input);
+		public abstract ValueTask<TOutput> PerformFiltering(TInput input);
 		protected virtual TOutput PerformFinalFiltering() => default;
 
 		protected sealed override async Task FlushAsync()
@@ -26,7 +26,7 @@ namespace AAXClean.FrameFilters
 
 		protected sealed override async Task HandleInputDataAsync(TInput input)
 		{
-			TOutput filteredData = PerformFiltering(input);
+			TOutput filteredData = await PerformFiltering(input);
 #if DEBUG
 			//Allow unlinked for testing purposes
 			if (Linked is null)

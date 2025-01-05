@@ -29,6 +29,11 @@ namespace AAXClean
 			{
 				if (!CanSeek)
 					throw new NotSupportedException();
+				
+				// Debug break when new position is before the current position
+				if (value < ReadPosition)
+					System.Diagnostics.Debugger.Break();
+				
 				BaseStream.Position = ReadPosition = value;
 			}
 		}

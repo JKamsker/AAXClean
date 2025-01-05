@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace AAXClean.FrameFilters.Audio
 {
 	internal class AacValidateFilter : FrameTransformBase<FrameEntry, FrameEntry>
 	{
 		protected override int InputBufferSize => 1000;
-		public override FrameEntry PerformFiltering(FrameEntry input)
+		public override async ValueTask<FrameEntry> PerformFiltering(FrameEntry input)
 		{
-			if (!ValidateFrame(input.FrameData.Span))
+			if (!await ValidateFrame(input.FrameData))
 				throw new Exception("Aac error!");
 
 			return input;
 		}
-		protected virtual bool ValidateFrame(Span<byte> frame) => (AV_RB16(frame) & 0xfff0) != 0xfff0;
+		protected virtual ValueTask<bool> ValidateFrame(Memory<byte> frame) 
+			=> new((AV_RB16(frame.Span) & 0xfff0) != 0xfff0);
 
 		//Defined at
 		//http://man.hubwiz.com/docset/FFmpeg.docset/Contents/Resources/Documents/api/intreadwrite_8h_source.html

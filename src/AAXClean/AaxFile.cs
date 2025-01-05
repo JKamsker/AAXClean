@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AAXClean
 {
@@ -61,17 +62,17 @@ namespace AAXClean
 
 		#region Aax(c) Keys
 
-		public void SetDecryptionKey(string activationBytes)
+		public async Task SetDecryptionKeyAsync(string activationBytes)
 		{
 			if (string.IsNullOrWhiteSpace(activationBytes) || activationBytes.Length != 8)
 				throw new ArgumentException($"{nameof(activationBytes)} must be 4 bytes long.");
 
 			byte[] actBytes = ByteUtil.BytesFromHexString(activationBytes);
 
-			SetDecryptionKey(actBytes);
+			await SetDecryptionKeyAsync(actBytes);
 		}
 
-		public void SetDecryptionKey(byte[] activationBytes)
+		public async Task SetDecryptionKeyAsync(byte[] activationBytes)
 		{
 			if (activationBytes is null || activationBytes.Length != 4)
 				throw new ArgumentException($"{nameof(activationBytes)} must be 4 bytes long.");
@@ -86,16 +87,16 @@ namespace AAXClean
 			//Adrm key derrivation from 
 			//https://github.com/FFmpeg/FFmpeg/blob/master/libavformat/mov.c in mov_read_adrm
 
-			byte[] intermediate_key = Crypto.Sha1(
+			byte[] intermediate_key = await Crypto.Sha1(
 			   (audible_fixed_key, 0, audible_fixed_key.Length),
 			   (activationBytes, 0, activationBytes.Length));
 
-			byte[] intermediate_iv = Crypto.Sha1(
+			byte[] intermediate_iv = await Crypto.Sha1(
 				(audible_fixed_key, 0, audible_fixed_key.Length),
 				(intermediate_key, 0, intermediate_key.Length),
 				(activationBytes, 0, activationBytes.Length));
 
-			byte[] calculatedChecksum = Crypto.Sha1(
+			byte[] calculatedChecksum = await Crypto.Sha1(
 				(intermediate_key, 0, 16),
 				(intermediate_iv, 0, 16));
 
@@ -104,7 +105,7 @@ namespace AAXClean
 
 			byte[] drmBlob = ByteUtil.CloneBytes(adrm.DrmBlob);
 
-			Crypto.DecryptInPlace(
+            await Crypto.DecryptInPlace(
 				ByteUtil.CloneBytes(intermediate_key, 0, 16),
 				ByteUtil.CloneBytes(intermediate_iv, 0, 16),
 				drmBlob);
@@ -114,7 +115,7 @@ namespace AAXClean
 
 			byte[] file_key = ByteUtil.CloneBytes(drmBlob, 8, 16);
 
-			byte[] file_iv = Crypto.Sha1(
+			byte[] file_iv = await Crypto.Sha1(
 				(drmBlob, 26, 16),
 				(file_key, 0, 16),
 				(audible_fixed_key, 0, 16));

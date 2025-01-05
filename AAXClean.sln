@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AAXClean.Test", "src\AAXCle
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mpeg4Lib", "src\Mpeg4Lib\Mpeg4Lib.csproj", "{AD2570C0-7D8B-4CD7-A2BF-8398580733E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{64AC3718-8776-46C4-853E-8B2223D16008}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{AD2570C0-7D8B-4CD7-A2BF-8398580733E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD2570C0-7D8B-4CD7-A2BF-8398580733E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD2570C0-7D8B-4CD7-A2BF-8398580733E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64AC3718-8776-46C4-853E-8B2223D16008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64AC3718-8776-46C4-853E-8B2223D16008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64AC3718-8776-46C4-853E-8B2223D16008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64AC3718-8776-46C4-853E-8B2223D16008}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
